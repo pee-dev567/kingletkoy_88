@@ -48,7 +48,6 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    /* ช่องกรอก IP */
     .ip-bar { display: flex; gap: 8px; }
     .ip-bar input {
       flex: 1;
@@ -69,7 +68,6 @@
       font-weight: bold;
     }
     .ip-bar button:hover { background: #0369a1; }
-    /* Ultrasonic */
     .distance-display {
       font-size: 3.2rem;
       font-weight: bold;
@@ -91,7 +89,6 @@
       background: linear-gradient(90deg, #34d399, #38bdf8);
       transition: width 0.3s ease;
     }
-    /* Keypad */
     .keypad-screen {
       background: #020617;
       border: 1px solid #334155;
@@ -118,7 +115,6 @@
       cursor: pointer;
     }
     .btn-clear:hover { background: #dc2626; }
-    /* Servo */
     .servo-header {
       display: flex;
       justify-content: space-between;
@@ -157,30 +153,26 @@
     <span class="status-badge" id="conn-status">● รอการเชื่อมต่อ</span>
   </header>
 
-  <!-- ตั้งค่า IP ของ Pico W -->
   <div class="card">
     <div class="card-title">ที่อยู่ IP ของ Raspberry Pi Pico W</div>
     <div class="ip-bar">
-      <input type="text" id="pico-ip" placeholder="เช่น 192.168.1.105">
+      <input type="text" id="pico-ip" placeholder="เช่น 10.103.16.251">
       <button onclick="saveIP()">บันทึก</button>
     </div>
   </div>
 
-  <!-- 1. Ultrasonic -->
   <div class="card">
     <div class="card-title">ระยะทาง (Ultrasonic)</div>
     <div class="distance-display"><span id="dist">--</span> <span class="unit">cm</span></div>
     <div class="bar-bg"><div class="bar-fill" id="dist-bar"></div></div>
   </div>
 
-  <!-- 2. Keypad -->
   <div class="card">
     <div class="card-title">ข้อมูลจาก Keypad (กด * บนบอร์ดเพื่อล้าง)</div>
     <div class="keypad-screen" id="keypad">-</div>
     <button class="btn-clear" onclick="clearKeypad()">ล้างข้อความ</button>
   </div>
 
-  <!-- 3. Servo -->
   <div class="card">
     <div class="servo-header">
       <span class="card-title" style="margin:0;">ควบคุม Servo Motor</span>
@@ -209,7 +201,7 @@
 
   setInterval(() => {
     if (!currentIP) return;
-    fetch('http://' + currentIP + '/status')
+    fetch('http://' + currentIP + '/status', { targetAddressSpace: 'private' })
       .then(res => res.json())
       .then(data => {
         const badge = document.getElementById('conn-status');
@@ -240,12 +232,12 @@
     if (!currentIP) return alert('กรุณากรอก IP ของ Pico W ก่อน');
     document.getElementById('angle-text').innerText = angle;
     document.getElementById('servo-slider').value = angle;
-    fetch('http://' + currentIP + '/servo?angle=' + angle);
+    fetch('http://' + currentIP + '/servo?angle=' + angle, { targetAddressSpace: 'private' });
   }
 
   function clearKeypad() {
     if (!currentIP) return;
-    fetch('http://' + currentIP + '/clear');
+    fetch('http://' + currentIP + '/clear', { targetAddressSpace: 'private' });
   }
 </script>
 
